@@ -160,6 +160,11 @@ typedef uintptr_t ioline_t;
  */
 typedef GPIO_TypeDef * ioportid_t;
 
+/**
+ * @brief Type of an pad identifier
+ */
+typedef uint32_t iopadid_t;
+
 /*===========================================================================*/
 /* I/O Ports Identifiers.                                                    */
 /*===========================================================================*/

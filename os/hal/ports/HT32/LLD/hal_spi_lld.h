@@ -21,11 +21,7 @@
  * @addtogroup SPI
  * @{
  */
-
-#ifndef HAL_SPI_LLD_H
-#define HAL_SPI_LLD_H
-
-#if (HAL_USE_SPI == TRUE) || defined(__DOXYGEN__)
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 
 /*===========================================================================*/
 /* Driver constants.                                                         */
