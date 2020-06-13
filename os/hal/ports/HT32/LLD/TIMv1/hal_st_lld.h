@@ -11,7 +11,7 @@
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
-    limitations under the License.
+    limitations under SYST_RVRthe License.
 */
 
 /**
@@ -77,6 +77,11 @@ extern "C" {
 /* Driver inline functions.                                                  */
 /*===========================================================================*/
 
+#define SYST_CSR    (*((volatile uint32_t*)0xE000E010))
+#define SYST_RVR    (*((volatile uint32_t*)0xE000E014))
+#define SYST_CVR    (*((volatile uint32_t*)0xE000E018))
+#define SYST_CALIB  (*((volatile uint32_t*)0xE000E01C))
+
 /**
  * @brief   Returns the time counter value.
  *
@@ -85,8 +90,7 @@ extern "C" {
  * @notapi
  */
 static inline systime_t st_lld_get_counter(void) {
-
-  return (systime_t)0;
+  return (systime_t) SYST_CVR;
 }
 
 /**
@@ -99,8 +103,9 @@ static inline systime_t st_lld_get_counter(void) {
  * @notapi
  */
 static inline void st_lld_start_alarm(systime_t abstime) {
-
-  (void)abstime;
+    SYST_RVR = (uint32_t)abstime;
+    SYST_CSR = 0b111;
+    SYST_CVR = 0; // Trigger reload
 }
 
 /**
@@ -109,7 +114,7 @@ static inline void st_lld_start_alarm(systime_t abstime) {
  * @notapi
  */
 static inline void st_lld_stop_alarm(void) {
-
+    SYST_CVR &= ~((uint32_t)0b10);
 }
 
 /**
@@ -120,8 +125,7 @@ static inline void st_lld_stop_alarm(void) {
  * @notapi
  */
 static inline void st_lld_set_alarm(systime_t abstime) {
-
-  (void)abstime;
+    SYST_RVR = (uint32_t)abstime;
 }
 
 /**
@@ -132,8 +136,7 @@ static inline void st_lld_set_alarm(systime_t abstime) {
  * @notapi
  */
 static inline systime_t st_lld_get_alarm(void) {
-
-  return (systime_t)0;
+    return (systime_t)SYST_RVR;
 }
 
 /**
@@ -146,8 +149,7 @@ static inline systime_t st_lld_get_alarm(void) {
  * @notapi
  */
 static inline bool st_lld_is_alarm_active(void) {
-
-  return false;
+  return ((SYST_CVR & 0b10) != 0);
 }
 
 #endif /* HAL_ST_LLD_H */

@@ -55,7 +55,8 @@
 /*
  * Configuration-related checks.
  */
-#if !defined(HT32_MCUCONF)
+#if !defined(HT32F165x_MCUCONF) && !defined(HT32F1654_MCUCONF) && \
+    !defined(HT32F1653_MCUCONF)
     #error "Using a wrong mcuconf.h file, HT32_MCUCONF not defined"
 #endif
 

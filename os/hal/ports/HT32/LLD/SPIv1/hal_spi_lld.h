@@ -21,6 +21,9 @@
  * @addtogroup SPI
  * @{
  */
+#ifndef HAL_SPI_LLD_H
+#define HAL_SPI_LLD_H
+
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 
 /*===========================================================================*/
@@ -56,71 +59,25 @@
 /* Driver data structures and types.                                         */
 /*===========================================================================*/
 
-/**
- * @brief   Type of a structure representing an SPI driver.
- */
-typedef struct SPIDriver SPIDriver;
 
 /**
- * @brief   SPI notification callback type.
- *
- * @param[in] spip      pointer to the @p SPIDriver object triggering the
- *                      callback
+ * @brief Low Level fields of the SPI driver structure.
  */
-typedef void (*spicallback_t)(SPIDriver *spip);
+#define spi_lld_driver_fields                                                  \
+  SPI_TypeDef               *SPI;                                              \
+  uint8_t                   *rxptr;                                            \
+  const uint8_t             *txptr;                                            \
+  size_t                    rxcnt;                                             \
+  size_t                    txcnt;                                             \
 
 /**
- * @brief   Driver configuration structure.
- * @note    Implementations may extend this structure to contain more,
- *          architecture dependent, fields.
+ * @brief Low Level fields of the SPI configuration structure.
  */
-typedef struct {
-  /**
-   * @brief Operation complete callback or @p NULL.
-   */
-  spicallback_t             end_cb;
-  /* End of the mandatory fields.*/
-  uint32_t                  cr0;
-  uint32_t                  cr1;
-  uint32_t                  cpr;
-  uint32_t                  fcr;
-} SPIConfig;
-
-/**
- * @brief   Structure representing an SPI driver.
- * @note    Implementations may extend this structure to contain more,
- *          architecture dependent, fields.
- */
-struct SPIDriver {
-  /**
-   * @brief Driver state.
-   */
-  spistate_t                state;
-  /**
-   * @brief Current configuration data.
-   */
-  const SPIConfig           *config;
-#if (SPI_USE_WAIT == TRUE) || defined(__DOXYGEN__)
-  /**
-   * @brief   Waiting thread.
-   */
-  thread_reference_t        thread;
-#endif
-#if (SPI_USE_MUTUAL_EXCLUSION == TRUE) || defined(__DOXYGEN__)
-  /**
-   * @brief   Mutex protecting the peripheral.
-   */
-  mutex_t                   mutex;
-#endif
-#if defined(SPI_DRIVER_EXT_FIELDS)
-  SPI_DRIVER_EXT_FIELDS
-#endif
-  /* End of the mandatory fields.*/
-  SPI_TypeDef *SPI;
-  uint8_t *rxptr;
-  const uint8_t *txptr;
-  size_t rxcnt, txcnt;
-};
+#define spi_lld_config_fields                                                  \
+    uint32_t                  cr0;                                             \
+    uint32_t                  cr1;                                             \
+    uint32_t                  cpr;                                             \
+    uint32_t                  fcr;
 
 /*===========================================================================*/
 /* Driver macros.                                                            */
