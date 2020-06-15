@@ -66,6 +66,9 @@ static void gpt_lld_handler(GPTDriver *gptp) {
 /*===========================================================================*/
 
 #if (HT32_GPT_USE_BFTM0 == TRUE) || defined(__DOXYGEN__)
+#ifndef HT32_BFTM0_IRQ_VECTOR
+#error "HT32_BFTM0_IRQ_VECTOR is not defined"
+#endif
 OSAL_IRQ_HANDLER(HT32_BFTM0_IRQ_VECTOR) {
     OSAL_IRQ_PROLOGUE();
     gpt_lld_handler(&GPTD_BFTM0);

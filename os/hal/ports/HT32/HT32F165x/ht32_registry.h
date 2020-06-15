@@ -120,6 +120,10 @@
 #define HT32_USB0_IS_USBOTG         FALSE
 #define HT32_HAS_USB_CLOCK_RECOVERY FALSE
 
+/* BFTM attributes. */
+#define HT32_BFTM0_IRQ_VECTOR       VectorE4
+#define HT32_BFTM1_IRQ_VECTOR       VectorE8
+
 /** @} */
 
 #endif /* defined(HT32F165x) */
