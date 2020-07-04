@@ -120,9 +120,8 @@
     #error "HT32 CK_AHB invalid"
 #endif
 
-#if HAL_USE_UART == TRUE
+#if (HAL_USE_UART == TRUE || HAL_USE_SERIAL == TRUE)
     #define HT32_CK_USART_FREQUENCY (HT32_CK_AHB_FREQUENCY / HT32_USART_PRESCALER) // Max 72 MHz
-
     #if HT32_CK_USART_FREQUENCY > 72000000
         #error "HT32 CK_USART invalid"
     #endif

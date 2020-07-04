@@ -459,76 +459,74 @@ typedef struct {
 // UART
 // /////////////////////////////////////////////////////////////////////////////
 typedef struct {
-  union {
-  __IO uint32_t RBR;            //!< 0x000          Receive Buffer Register
-  __IO uint32_t TBR;            //!< 0x000          Transmit Holding Register
   __IO uint32_t DR;             //!< 0x000          Data Register
-  };
-  __IO uint32_t IER;            //!< 0x004          Interrupt Enable Register
-  __IO uint32_t IIR;            //!< 0x008          Interrupt Identification Register/FIFO Control Register
-  __IO uint32_t FCR;            //!< 0x00C          FIFO Control Register
-  __IO uint32_t LCR;            //!< 0x010          Line Control Register
-  // note: only available as USART
-  __IO uint32_t MODCR;          //!< 0x014          Modem Control Register
+  __IO uint32_t CR;             //!< 0x004          Control Register
+  // Only USART
+  __IO uint32_t FCR;            //!< 0x008          FIFO Control Register
+  __IO uint32_t IER;            //!< 0x00C          Interrupt Enable Register
+  __IO uint32_t SIFR;           //!< 0x010          Status & Interrupt Flag Register
+
+  __IO uint32_t TPR;            //!< 0x014          Timing Parameter Register
+
+  __IO uint32_t IrDACR;         //!< 0x018          IrDA Control Register
+  __IO uint32_t RS485CR;        //!< 0x01C          RS485 Control Register
+  __IO uint32_t SYNCR;          //!< 0x020          Synchronous Control Register
   // end note
-  __IO uint32_t LSR;            //!< 0x018          Line Status Register
-  // note: only available as USART
-  __IO uint32_t MODSR;          //!< 0x01C          Modem Status Register
-  // end note
-  __IO uint32_t TPR;            //!< 0x020          Timing Parameter Register
-  __IO uint32_t MDR;            //!< 0x024          Mode Register
-  // note: only available as USART
-  __IO uint32_t IrDACR;         //!< 0x028          IrDA Control Register
-  __IO uint32_t RS485CR;        //!< 0x02C          RS485 Control Register
-  __IO uint32_t SYNCR;          //!< 0x030          Synchronous Control Register
-  // end note
-  __IO uint32_t FSR;            //!< 0x034          FIFO Status Register
-  __IO uint32_t DLR;            //!< 0x038          Divisor Latch Register
-       uint32_t RESERVED0;      //!< 0x03C          Reserved
-  __IO uint32_t DEGTSTR;        //!< 0x040          Debug/Test Register
+  __IO uint32_t DLR;            //!< 0x024          Divider Latch Register
+  __IO uint32_t TSTR;           //!< 0x028          Debug/Test Register
 } USART_TypeDef;
 
-#define USART_FCR_FME               (1 << 0)
-#define USART_FCR_RFR               (1 << 1)
-#define USART_FCR_TFR               (1 << 2)
-#define USART_FCR_TFTL_MASK         (0x3 << 4)
-#define USART_FCR_TFTL_0BYTE        (0x0 << 4)
-#define USART_FCR_TFTL_2BYTE        (0x1 << 4)
-#define USART_FCR_TFTL_4BYTE        (0x2 << 4)
-#define USART_FCR_TFTL_8BYTE        (0x3 << 4)
-#define USART_FCR_RFTL_MASK         (0x3 << 6)
-#define USART_FCR_RFTL_1BYTE        (0x0 << 6)
-#define USART_FCR_RFTL_4BYTE        (0x1 << 6)
-#define USART_FCR_RFTL_8BYTE        (0x2 << 6)
-#define USART_FCR_RFTL_14BYTE       (0x3 << 6)
-#define USART_FCR_URTXEN            (1 << 8)
-#define USART_FCR_URRXEN            (1 << 9)
-#define USART_LCR_WLS_MASK          (0x3 << 0)
-#define USART_LCR_WLS_7BIT          (0x0 << 0)
-#define USART_LCR_WLS_8BIT          (0x1 << 0)
-#define USART_LCR_WLS_9BIT          (0x2 << 0)
-#define USART_LCR_NSB               (1 << 2)
-#define USART_LCR_PBE               (1 << 3)
-#define USART_LCR_EPE               (1 << 4)
-#define USART_LCR_SPE               (1 << 5)
-#define USART_LCR_BCB               (1 << 6)
-#define USART_LSR_RFDR              (1 << 0)
-#define USART_LSR_OEI               (1 << 1)
-#define USART_LSR_PEI               (1 << 2)
-#define USART_LSR_FEI               (1 << 3)
-#define USART_LSR_BII               (1 << 4)
-#define USART_LSR_TXFEMPT           (1 << 5)
-#define USART_LSR_TXEMPT            (1 << 6)
-#define USART_LSR_ERRRX             (1 << 7)
-#define USART_LSR_RSADDEF           (1 << 8)
-#define USART_MDR_MODE_MASK         (0x3 << 0)
-#define USART_MDR_MODE_NORMAL       (0x0 << 0)
-#define USART_MDR_MODE_IRDA         (0x1 << 0)
-#define USART_MDR_MODE_RS485        (0x2 << 0)
-#define USART_MDR_MODE_SYNCHRONOUS  (0x3 << 0)
-#define USART_MDR_TRSM              (1 << 2)
-#define USART_MDR_TXDMAEN           (1 << 4)
-#define USART_MDR_RXDMAEN           (1 << 5)
+// USART CR
+#define UART_CR_MODE_MASK                 (0b11 << 0)
+#define UART_CR_MODE_NORMAL               (0 << 0)
+#define UART_CR_TRSM                      (1 << 2)
+#define UART_CR_HFCEN                     (1 << 3)
+#define UART_CR_URTXEN                    (1 << 4)
+#define UART_CR_URRXEN                    (1 << 5)
+#define UART_CR_TXDMAEN                   (1 << 6)
+#define UART_CR_RXDMAEN                   (1 << 7)
+#define UART_CR_WLS_MASK                  (0b11 << 8)
+#define UART_CR_WLS_7B                    (0b00 << 8)
+#define UART_CR_WLS_8B                    (0b01 << 8)
+#define UART_CR_WLS_9B                    (0b10 << 8)
+#define UART_CR_NSB                       (1 << 10)
+#define UART_CR_PBE                       (1 << 11)
+#define UART_CR_EPE                       (1 << 12)
+#define UART_CR_SPE                       (1 << 13)
+#define UART_CR_BCB                       (1 << 14)
+#define UART_CR_RTS                       (1 << 15)
+// USART FCR (FIFO CR)
+#define USART_FCR_TXR               (1 << 0)
+#define USART_FCR_RXR               (1 << 1)
+#define USART_FCR_TXTL_MASK         (0b11 << 4)
+#define USART_FCR_RXTL_MASK         (0b11 << 6)
+#define USART_FCR_TXFS_MASK         (0xF << 16)
+#define USART_FCR_RXFS_MASK         (0xF << 24)
+// USART SIFR Status and Interrupt Flag Register
+#define USART_SIFR_RXDNE        (1 << 0)
+#define USART_SIFR_OEI          (1 << 1)
+#define USART_SIFR_PEI          (1 << 2)
+#define USART_SIFR_FEI          (1 << 3)
+#define USART_SIFR_BII          (1 << 4)
+#define USART_SIFR_RXDR         (1 << 5)
+#define USART_SIFR_RXTOF        (1 << 6)
+#define USART_SIFR_TXDE         (1 << 7)
+#define USART_SIFR_TXC          (1 << 8)
+#define USART_SIFR_RSADDE       (1 << 9)
+#define USART_SIFR_CTSC         (1 << 10)
+#define USART_SIFR_CTSS         (1 << 11)
+// USART IER
+#define USART_IER_RXDRIE            (1 << 0)
+#define USART_IER_TXDEIE            (1 << 1)
+#define USART_IER_TXCIE             (1 << 2)
+#define USART_IER_OEIE              (1 << 3)
+#define USART_IER_PEIE              (1 << 4)
+#define USART_IER_FEIE              (1 << 5)
+#define USART_IER_BIE               (1 << 6)
+#define USART_IER_RSADDIE           (1 << 7)
+#define USART_IER_RXTOIE            (1 << 8)
+#define USART_IER_CTSIE             (1 << 9)
+
 
 // Smart Card Interface
 // /////////////////////////////////////////////////////////////////////////////

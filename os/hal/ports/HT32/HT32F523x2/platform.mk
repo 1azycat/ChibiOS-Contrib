@@ -27,7 +27,7 @@ include $(CHIBIOS_CONTRIB)/os/hal/ports/HT32/LLD/TIMv1/driver.mk
 include $(CHIBIOS_CONTRIB)/os/hal/ports/HT32/LLD/SPIv1/driver.mk
 include $(CHIBIOS_CONTRIB)/os/hal/ports/HT32/LLD/GPIOv1/driver.mk
 include $(CHIBIOS_CONTRIB)/os/hal/ports/HT32/LLD/USBv1/driver.mk
-include $(CHIBIOS_CONTRIB)/os/hal/ports/HT32/LLD/USARTv1/driver.mk
+include $(CHIBIOS_CONTRIB)/os/hal/ports/HT32/LLD/USART_F5xxxx/driver.mk
 
 
 # Shared variables

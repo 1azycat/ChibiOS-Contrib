@@ -50,7 +50,7 @@ SerialDriver SD1;
  * @brief   Driver default configuration.
  */
 static const SerialConfig default_config = {
-  115200
+  SERIAL_DEFAULT_BITRATE
 };
 
 /*===========================================================================*/
@@ -135,7 +135,7 @@ static void usart_init(SerialDriver *sdp, const SerialConfig *config)
 {
 	USART_TypeDef *u = sdp->usart;
 
-	u->DLR = (uint32_t)(72000000 / config->speed); /* XXX */
+	u->DLR = (uint32_t)(HT32_CK_USART_FREQUENCY / config->speed); /* XXX */
 	u->LCR = 0x01; /* 8-bit, one stop, no parity */
 	u->FCR = 0x301;
 }
