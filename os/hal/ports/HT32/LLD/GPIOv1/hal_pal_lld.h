@@ -126,7 +126,7 @@ struct port_setup {
   uint16_t PU;
   uint16_t PD;
   uint16_t OD;
-  uint16_t DRV;
+  uint32_t DRV;
   uint16_t LOCK;
   uint16_t OUT;
   uint32_t CFG[2];
