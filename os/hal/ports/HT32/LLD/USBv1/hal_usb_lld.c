@@ -207,8 +207,12 @@ OSAL_IRQ_HANDLER(HT32_USB_IRQ_VECTOR) {
 
     // Reset Interrupt
     if(isr & USBISR_URSTIF){
-        // Reset routine and event callback
-        _usb_reset(usbp);
+        if(isr & USBISR_FRESIF) {
+            usb_clear_int_flags(USBISR_FRESIF);
+        } else {
+            // Reset routine and event callback
+            _usb_reset(usbp);
+        }
         usb_clear_int_flags(USBISR_URSTIF);
     }
 
@@ -397,11 +401,15 @@ void usb_lld_start(USBDriver *usbp){
             /* USBD_PowerUp */
             USB->CSR = USBCSR_DPWKEN | USBCSR_DPPUEN | USBCSR_LPMODE | USBCSR_PDWN;
             // enable usb interrupts
-            USB->ISR = ~0U;
+            while((USB->ISR & USBIER_URSTIE) == 0);
+            USB->ISR = 0xFFFFFFFF;
             USB->CSR &= ~USBCSR_DPWKEN;
             USB->IER = USBIER_UGIE | USBIER_SOFIE |
                 USBIER_URSTIE | USBIER_RSMIE | USBIER_SUSPIE |
                 USBIER_EP0IE;
+            USB->CSR &= ~USBCSR_DPPUEN;
+            osalThreadSleepMilliseconds(200);
+            USB->CSR |= USBCSR_DPPUEN;
         }
 #endif // HT32_USB_USE_USB1
     }
@@ -441,7 +449,8 @@ void usb_lld_stop(USBDriver *usbp) {
 void usb_lld_reset(USBDriver *usbp) {
     // USB Reset
     // Clear CSR, except for DP pull up
-    USB->CSR &= USBCSR_DPPUEN;
+    USB->CSR |= 0x00001000;
+    USB->CSR &= 0x00001400;
 
     /* Post reset initialization.*/
     usbp->epmem_next = 8;
@@ -449,7 +458,7 @@ void usb_lld_reset(USBDriver *usbp) {
     /* EP0 initialization.*/
     usbp->epc[0] = &ep0config;
     usb_lld_init_endpoint(usbp, 0);
-
+    
     USB->IER = USBIER_UGIE | USBIER_SOFIE |
         USBIER_URSTIE | USBIER_RSMIE | USBIER_SUSPIE |
         USBIER_EP0IE;
